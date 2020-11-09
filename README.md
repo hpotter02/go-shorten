@@ -1,1 +1,1 @@
-# ShorLinkGen
+# go-shorten
