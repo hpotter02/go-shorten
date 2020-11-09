@@ -4,8 +4,20 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <script src="script.js"></script>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <h1>Hello</h1>
+    <div class="container">
+        <div id="header" onclick="copyLink()">go-shorten</div>
+        <div class="inputbar">
+            <form onsubmit="submitURL(event)">
+                <input type="text" name="url" id="urlInput" autocomplete="off" autofocus>
+            </form>
+        </div>
+        <div id="errortext">
+            
+        </div>
+    </div>
 </body>
 </html>

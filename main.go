@@ -36,8 +36,10 @@ func main() {
 	}
 	defer db.Close()
 	fmt.Println("test")
-	r := mux.NewRouter()
+	r := mux.NewRouter().StrictSlash(true)
 	r.Handle("/", http.FileServer(http.Dir("./page"))).Methods("GET")
+	r.Handle("/style.css", http.FileServer(http.Dir("./page"))).Methods("GET")
+	r.Handle("/script.js", http.FileServer(http.Dir("./page"))).Methods("GET")
 	r.HandleFunc("/", handleCreateLink).Methods("POST")
 	r.HandleFunc("/{id}", handleRedirect)
 	http.ListenAndServe(":8800", r)
@@ -70,14 +72,18 @@ func handleCreateLink(w http.ResponseWriter, r *http.Request) {
 	if !isValidURL(sl.Destination) {
 		w.WriteHeader(http.StatusBadRequest)
 		fmt.Fprint(w, `{"error":"Invalid URL"}`)
-	}
-	sl.ID = generateID()
-	tmp, _ := getURL(sl.Name)
-	if tmp != "" {
-		w.WriteHeader(http.StatusBadRequest)
-		fmt.Fprint(w, `{"error":"Name Already Taken"}`)
 		return
 	}
+	sl.ID = generateID()
+	if sl.Name != "" {
+		tmp, _ := getURL(sl.Name)
+		if tmp != "" {
+			w.WriteHeader(http.StatusBadRequest)
+			fmt.Fprint(w, `{"error":"Name Already Taken"}`)
+			return
+		}
+	}
+
 	err = setURL(sl)
 	if err != nil {
 		fmt.Println(err)
@@ -111,7 +117,9 @@ func generateID() string {
 func setURL(s shortLink) error {
 	err := db.Update(func(txn *badger.Txn) error {
 		txn.Set([]byte(s.ID), []byte(s.Destination))
-		txn.Set([]byte(s.Name), []byte(s.Destination))
+		if s.Name != "" {
+			txn.Set([]byte(s.Name), []byte(s.Destination))
+		}
 		return nil
 	})
 	return err
