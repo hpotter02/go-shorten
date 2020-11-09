@@ -33,6 +33,10 @@ body {
     margin: auto;
     font-size: 5rem;
     margin-bottom: 2rem;
+    transition: all 100ms ease-in-out;
+}
+#header:active {
+    font-size: 4.9rem;
 }
 #errortext {
     width: max-content;
