@@ -30,7 +30,7 @@ jobs:
         fi
 
     - name: Build
-      run: go build -v . -o go-shorten
+      run: go build  -o go-shorten -v .
     
     - name: Upload
       uses: actions/upload-artifact@v2
