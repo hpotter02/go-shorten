@@ -40,6 +40,7 @@ func main() {
 	r.Handle("/", http.FileServer(http.Dir("./page"))).Methods("GET")
 	r.Handle("/style.css", http.FileServer(http.Dir("./page"))).Methods("GET")
 	r.Handle("/script.js", http.FileServer(http.Dir("./page"))).Methods("GET")
+	r.Handle("/favicon.ico", http.FileServer(http.Dir("./page"))).Methods("GET")
 	r.HandleFunc("/", handleCreateLink).Methods("POST")
 	r.HandleFunc("/{id}", handleRedirect)
 	http.ListenAndServe(":8800", r)
